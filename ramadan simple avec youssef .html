@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramadan Simple — Youssef Lachhab 🌙</title>
+<meta name="author" content="Youssef Lachhab">
+<meta name="description" content="Application web Ramadan 1446 — Horaires officiels Habous, Iftar, Zakat, Douas. Par Youssef Lachhab.">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#C9A84C;--gold-light:#E8C97A;--dark:#0A0E1A;--dark2:#111827;--card:rgba(255,255,255,0.04);--border:rgba(201,168,76,0.2);--text:#e8e0d0;--muted:#8a8070}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1px at 10% 15%,rgba(201,168,76,.6) 0%,transparent 100%),radial-gradient(1px 1px at 30% 5%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 50% 20%,rgba(201,168,76,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 10%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 85% 25%,rgba(201,168,76,.5) 0%,transparent 100%),radial-gradient(1px 1px at 20% 40%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 5% 60%,rgba(201,168,76,.4) 0%,transparent 100%),radial-gradient(1px 1px at 75% 65%,rgba(201,168,76,.5) 0%,transparent 100%),radial-gradient(1px 1px at 40% 75%,rgba(255,255,255,.3) 0%,transparent 100%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 0%,rgba(201,168,76,.07) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 100%,rgba(100,60,160,.07) 0%,transparent 60%);pointer-events:none;z-index:0}
+.wrap{max-width:920px;margin:0 auto;padding:20px;position:relative;z-index:1}
+header{text-align:center;padding:36px 0 24px;animation:fadeDown .8s ease}
+.moon{font-size:2.8rem;display:block;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(201,168,76,.6))}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+header h1{font-family:'Amiri',serif;font-size:clamp(1.8rem,5vw,2.8rem);background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0 4px}
+header p{color:var(--muted);font-size:.82rem;letter-spacing:2px;text-transform:uppercase}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.datebar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:12px 20px;background:rgba(201,168,76,.05);border:1px solid var(--border);border-radius:12px;margin-bottom:20px}
+.datebar span{font-size:.8rem;color:var(--muted)}.datebar strong{color:var(--gold)}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
+.tab{padding:9px 18px;border:1px solid var(--border);background:var(--card);color:var(--muted);border-radius:50px;cursor:pointer;font-family:'Poppins',sans-serif;font-size:.82rem;transition:all .3s;backdrop-filter:blur(10px)}
+.tab:hover,.tab.on{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,.15)}
+.sec{display:none;animation:fadeIn .4s ease}.sec.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:26px;margin-bottom:16px;backdrop-filter:blur(20px);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-2px);box-shadow:0 10px 40px rgba(201,168,76,.08)}
+.card h2{font-size:.88rem;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.sel{width:100%;padding:11px 16px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:.88rem;margin-bottom:18px;cursor:pointer;outline:none;transition:border-color .3s}
+.sel:focus{border-color:var(--gold)}.sel option{background:var(--dark2)}
+/* PRAYER GRID */
+.pgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+@media(max-width:600px){.pgrid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:360px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+.pitem{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;transition:all .3s}
+.pitem.next{background:rgba(201,168,76,.12);border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,.15)}
+.pname{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.ptime{font-size:1.2rem;font-weight:600;color:var(--gold-light)}
+.pitem.next .pname{color:var(--gold)}
+.badge{font-size:.6rem;background:var(--gold);color:var(--dark);border-radius:20px;padding:2px 7px;margin-top:4px;display:inline-block;font-weight:700}
+/* COUNTDOWN */
+.cbox{text-align:center;padding:18px;background:rgba(201,168,76,.05);border:1px solid var(--border);border-radius:14px;margin-top:14px}
+.clabel{color:var(--muted);font-size:.78rem;margin-bottom:6px}
+.ctime{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;color:var(--gold);letter-spacing:3px;font-variant-numeric:tabular-nums}
+.snote{text-align:center;font-size:.7rem;color:var(--muted);margin-top:10px}
+/* NO PRAYER FOUND */
+.no-prayer{text-align:center;padding:30px;color:var(--muted);font-size:.9rem}
+/* INPUTS */
+.igroup{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.igroup input,.igroup select{flex:1;min-width:180px;padding:11px 16px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s}
+.igroup input:focus,.igroup select:focus{border-color:var(--gold)}
+.igroup input::placeholder{color:var(--muted)}
+.btn{padding:11px 22px;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--dark);border:none;border-radius:12px;font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .3s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(201,168,76,.35)}
+.btn.ghost{background:rgba(255,255,255,.05);color:var(--gold);border:1px solid var(--border)}
+.btn.ghost:hover{background:rgba(201,168,76,.1)}
+.mresult{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:14px;display:none}
+.mresult.on{display:block;animation:fadeIn .4s ease}
+.mcat{margin-bottom:14px}.mcat h3{color:var(--gold);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.mcat ul{list-style:none;display:flex;flex-wrap:wrap;gap:7px}
+.mcat ul li{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);padding:4px 12px;border-radius:20px;font-size:.8rem;color:var(--gold-light)}
+.hlist{list-style:none}
+.hitem{display:flex;align-items:center;gap:14px;padding:13px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;margin-bottom:9px;cursor:pointer;transition:all .3s;user-select:none}
+.hitem:hover{background:rgba(201,168,76,.05)}.hitem.done{background:rgba(201,168,76,.08);border-color:rgba(201,168,76,.4)}
+.hcheck{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0}
+.hitem.done .hcheck{background:var(--gold);border-color:var(--gold)}
+.hcheck::after{content:'✓';color:var(--dark);font-size:.75rem;font-weight:700;opacity:0;transition:opacity .3s}
+.hitem.done .hcheck::after{opacity:1}
+.hname{flex:1;font-size:.9rem}.hitem.done .hname{color:var(--muted);text-decoration:line-through}.hemoji{font-size:1.1rem}
+.pbar-wrap{background:rgba(255,255,255,.05);border-radius:50px;height:8px;margin:0 0 6px;overflow:hidden}
+.pbar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:50px;transition:width .5s ease}
+.plabel{text-align:right;font-size:.76rem;color:var(--gold);margin-bottom:14px}
+.zgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:500px){.zgrid{grid-template-columns:1fr}}
+.zfield label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:1px}
+.zfield input{width:100%;padding:11px 14px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'Poppins',sans-serif;font-size:.88rem;outline:none;transition:border-color .3s}
+.zfield input:focus{border-color:var(--gold)}
+.zresult{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:14px;padding:18px;text-align:center;display:none;margin-top:14px}
+.zresult.on{display:block;animation:fadeIn .4s ease}
+.zamount{font-size:1.9rem;font-weight:700;color:var(--gold);margin:8px 0}.zlabel{color:var(--muted);font-size:.83rem}
+.zinfo{font-size:.76rem;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);line-height:1.5}
+.dcard{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:22px;text-align:center;margin-bottom:14px;min-height:170px;display:flex;flex-direction:column;justify-content:center}
+.darabic{font-family:'Amiri',serif;font-size:clamp(1.1rem,3vw,1.5rem);color:var(--gold-light);line-height:2;margin-bottom:10px;direction:rtl}
+.dtrans{font-size:.83rem;color:var(--muted);font-style:italic;line-height:1.6}
+.dctx{margin-top:8px;font-size:.72rem;color:var(--gold);opacity:.75}
+.dnav{display:flex;gap:10px;justify-content:center;align-items:center;margin-top:14px}
+footer{text-align:center;padding:26px 0;color:var(--muted);font-size:.75rem}
+footer a{color:var(--gold);text-decoration:none}
+
+.rday-info{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:rgba(201,168,76,.05);border:1px solid var(--border);border-radius:10px;margin-bottom:16px;font-size:.8rem}
+.rday-info span{color:var(--muted)}.rday-info strong{color:var(--gold)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="moon">🌙</span>
+  <h1>Ramadan Simple</h1>
+  <p>رمضان كريم — Par Youssef Lachhab</p>
+</header>
+
+<div class="datebar">
+  <span>📅 <strong id="gdate">--</strong></span>
+  <span>🗓️ <strong id="hdate">--</strong></span>
+  <span>⏰ <strong id="clock">--:--:--</strong></span>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="go('prayers',this)">🕌 Prières</button>
+  <button class="tab"    onclick="go('iftar',this)">🍽️ Menu Iftar</button>
+  <button class="tab"    onclick="go('habits',this)">✅ Objectifs</button>
+  <button class="tab"    onclick="go('zakat',this)">💰 Zakat</button>
+  <button class="tab"    onclick="go('duaa',this)">📿 Douas</button>
+</div>
+
+<div class="sec on" id="sec-prayers">
+  <div class="card">
+    <h2>🕌 Horaires de Prière Officiels — Habous</h2>
+    <select class="sel" id="city-sel" onchange="showPrayers()">
+      <option value="beni-mellal">Béni Mellal</option>
+      <option value="casablanca">Casablanca</option>
+      <option value="rabat">Rabat</option>
+      <option value="marrakech">Marrakech</option>
+      <option value="fes">Fès</option>
+      <option value="tanger">Tanger</option>
+      <option value="agadir">Agadir</option>
+      <option value="meknes">Meknès</option>
+      <option value="oujda">Oujda</option>
+      <option value="kenitra">Kénitra</option>
+      <option value="tetouan">Tétouan</option>
+      <option value="safi">Safi</option>
+      <option value="eljadida">El Jadida</option>
+      <option value="khouribga">Khouribga</option>
+      <option value="laayoune">Laâyoune</option>
+    </select>
+
+    <div class="rday-info">
+      <span>Jour Ramadan :</span>
+      <strong id="rday-num">--</strong>
+      <span>| Date :</span>
+      <strong id="rday-date">--</strong>
+    </div>
+
+    <div class="pgrid" id="pgrid"></div>
+
+    <div class="cbox">
+      <div class="clabel" id="clabel">Prochain</div>
+      <div class="ctime" id="ctime">--:--:--</div>
+    </div>
+
+    <div class="snote">
+     
+    </div>
+  </div>
+</div>
+
+
+<div class="sec" id="sec-iftar">
+  <div class="card">
+    <h2>🍽️ Générateur de Menu Iftar</h2>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:16px;">Entrez vos ingrédients et obtenez un menu Iftar complet.</p>
+    <div class="igroup">
+      <input type="text" id="ingr" placeholder="Ex: poulet, tomates, riz...">
+      <select id="mpref" style="flex:0 0 auto;padding:11px 16px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:'Poppins',sans-serif;outline:none;">
+        <option value="equilibre">Équilibré</option>
+        <option value="leger">Léger</option>
+        <option value="traditionnel">Traditionnel</option>
+      </select>
+    </div>
+    <button class="btn" onclick="genMenu()">✨ Générer le Menu</button>
+    <div class="mresult" id="mresult"></div>
+  </div>
+</div>
+
+<div class="sec" id="sec-habits">
+  <div class="card">
+    <h2>✅ Objectifs Ramadan du Jour</h2>
+    <div class="pbar-wrap"><div class="pbar" id="pbar" style="width:0%"></div></div>
+    <div class="plabel" id="plabel">0 / 8 accompli</div>
+    <ul class="hlist">
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">🌅</div><div class="hname">Prière de Fajr</div><div class="hcheck"></div></li>
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">📖</div><div class="hname">Lecture du Coran (1 Hizb)</div><div class="hcheck"></div></li>
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">🕌</div><div class="hname">Prière de Tarawih</div><div class="hcheck"></div></li>
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">💧</div><div class="hname">8 verres d'eau (hors jeûne)</div><div class="hcheck"></div></li>
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">📿</div><div class="hname">100 Istighfar</div><div class="hcheck"></div></li>
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">🤲</div><div class="hname">Dou'a avant Iftar</div><div class="hcheck"></div></li>
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">💪</div><div class="hname">Exercice léger 20 min</div><div class="hcheck"></div></li>
+      <li class="hitem" onclick="toggleH(this)"><div class="hemoji">❤️</div><div class="hname">Bonne action du jour</div><div class="hcheck"></div></li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="sec" id="sec-zakat">
+  <div class="card">
+    <h2>💰 Calculateur de Zakat al-Mal</h2>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:18px;">Nisab = 85g d'or ≈ 29 750 MAD. Taux Zakat : 2.5%</p>
+    <div class="zgrid">
+      <div class="zfield"><label>Argent liquide (MAD)</label><input type="number" id="z1" placeholder="0" min="0"></div>
+      <div class="zfield"><label>Épargne / Banque (MAD)</label><input type="number" id="z2" placeholder="0" min="0"></div>
+      <div class="zfield"><label>Or (grammes)</label><input type="number" id="z3" placeholder="0" min="0"></div>
+      <div class="zfield"><label>Argent métal (grammes)</label><input type="number" id="z4" placeholder="0" min="0"></div>
+      <div class="zfield"><label>Marchandises (MAD)</label><input type="number" id="z5" placeholder="0" min="0"></div>
+      <div class="zfield"><label>Investissements (MAD)</label><input type="number" id="z6" placeholder="0" min="0"></div>
+    </div>
+    <button class="btn" onclick="calcZakat()">📊 Calculer ma Zakat</button>
+    <div class="zresult" id="zresult">
+      <div class="zlabel">Votre Zakat à payer</div>
+      <div class="zamount" id="zamount">0 MAD</div>
+      <div class="zinfo" id="zinfo"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DUAA -->
+<div class="sec" id="sec-duaa">
+  <div class="card">
+    <h2>📿 Douas Essentielles du Ramadan</h2>
+    <div class="dcard" id="dcard"></div>
+    <div class="dnav">
+      <button class="btn ghost" onclick="prevD()">← Précédent</button>
+      <span id="dctr" style="color:var(--muted);font-size:.85rem;min-width:50px;text-align:center;"></span>
+      <button class="btn" onclick="nextD()">Suivant →</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  🌙 Ramadan Simple — Youssef Lachhab &nbsp;|&nbsp;
+  <a href="https://www.linkedin.com/in/youssef-lachhab" target="_blank">LinkedIn</a>
+  &nbsp;|&nbsp; Ramadan 1446 — 2026
+</footer>
+
+</div>
+
+<script>
+const HABOUS = {
+  "beni-mellal": {
+    nom: "Béni Mellal",
+    t:[
+      ["05:37","06:58","12:44","15:50","18:22","19:32"],
+      ["05:36","06:56","12:44","15:50","18:23","19:33"],
+      ["05:35","06:55","12:44","15:51","18:23","19:34"],
+      ["05:34","06:54","12:44","15:51","18:24","19:34"],
+      ["05:33","06:53","12:44","15:52","18:25","19:35"],
+      ["05:32","06:52","12:44","15:52","18:26","19:36"],
+      ["05:31","06:51","12:43","15:53","18:27","19:37"],
+      ["05:30","06:50","12:43","15:53","18:28","19:37"],
+      ["05:29","06:49","12:43","15:54","18:28","19:38"],
+      ["05:28","06:48","12:43","15:54","18:29","19:39"],
+      ["05:26","06:47","12:43","15:55","18:30","19:40"],
+      ["05:25","06:45","12:43","15:55","18:31","19:40"],
+      ["05:24","06:44","12:42","15:55","18:31","19:41"],
+      ["05:23","06:43","12:42","15:56","18:32","19:42"],
+      ["05:22","06:42","12:42","15:56","18:33","19:43"],
+      ["05:21","06:41","12:42","15:57","18:34","19:43"],
+      ["05:19","06:39","12:41","15:57","18:34","19:44"],
+      ["05:18","06:38","12:41","15:57","18:35","19:45"],
+      ["05:17","06:37","12:41","15:58","18:36","19:46"],
+      ["05:16","06:36","12:41","15:58","18:37","19:46"],
+      ["05:14","06:34","12:40","15:58","18:37","19:47"],
+      ["05:13","06:33","12:40","15:58","18:38","19:48"],
+      ["05:12","06:32","12:40","15:59","18:39","19:49"],
+      ["05:10","06:31","12:40","15:59","18:40","19:49"],
+      ["05:09","06:29","12:39","15:59","18:40","19:50"],
+      ["05:08","06:28","12:39","16:00","18:41","19:51"],
+      ["05:06","06:27","12:39","16:00","18:42","19:52"],
+      ["05:05","06:25","12:39","16:00","18:42","19:53"],
+      ["05:04","06:24","12:38","16:00","18:43","19:53"],
+      ["05:02","06:23","12:38","16:00","18:44","19:54"],
+    ]
+  },
+  // Les autres villes : décalage calculé par rapport à Béni Mellal
+  // basé sur les données réelles Habous
+  "casablanca": {
+    nom: "Casablanca",
+    t:[
+      ["05:32","06:52","12:40","15:48","18:18","19:28"],
+      ["05:31","06:51","12:40","15:48","18:19","19:29"],
+      ["05:30","06:50","12:40","15:49","18:20","19:30"],
+      ["05:29","06:49","12:40","15:49","18:21","19:30"],
+      ["05:28","06:48","12:40","15:50","18:22","19:31"],
+      ["05:27","06:47","12:40","15:50","18:23","19:32"],
+      ["05:26","06:46","12:39","15:51","18:23","19:33"],
+      ["05:25","06:45","12:39","15:51","18:24","19:33"],
+      ["05:24","06:44","12:39","15:52","18:25","19:34"],
+      ["05:23","06:43","12:39","15:52","18:26","19:35"],
+      ["05:22","06:42","12:39","15:53","18:27","19:36"],
+      ["05:20","06:40","12:39","15:53","18:27","19:36"],
+      ["05:19","06:39","12:38","15:53","18:28","19:37"],
+      ["05:18","06:38","12:38","15:54","18:29","19:38"],
+      ["05:17","06:37","12:38","15:54","18:30","19:39"],
+      ["05:16","06:36","12:38","15:55","18:30","19:39"],
+      ["05:14","06:34","12:37","15:55","18:31","19:40"],
+      ["05:13","06:33","12:37","15:55","18:32","19:41"],
+      ["05:12","06:32","12:37","15:56","18:33","19:42"],
+      ["05:11","06:31","12:37","15:56","18:33","19:42"],
+      ["05:09","06:29","12:36","15:56","18:34","19:43"],
+      ["05:08","06:28","12:36","15:56","18:35","19:44"],
+      ["05:07","06:27","12:36","15:57","18:36","19:45"],
+      ["05:05","06:26","12:36","15:57","18:36","19:45"],
+      ["05:04","06:24","12:35","15:57","18:37","19:46"],
+      ["05:03","06:23","12:35","15:58","18:38","19:47"],
+      ["05:01","06:22","12:35","15:58","18:38","19:48"],
+      ["05:00","06:20","12:35","15:58","18:39","19:48"],
+      ["04:59","06:19","12:34","15:58","18:40","19:49"],
+      ["04:57","06:18","12:34","15:58","18:41","19:50"],
+    ]
+  },
+  "rabat": {
+    nom: "Rabat",
+    t:[
+      ["05:31","06:51","12:39","15:47","18:17","19:27"],
+      ["05:30","06:50","12:39","15:47","18:18","19:28"],
+      ["05:29","06:49","12:39","15:48","18:19","19:29"],
+      ["05:28","06:48","12:39","15:48","18:20","19:29"],
+      ["05:27","06:47","12:39","15:49","18:21","19:30"],
+      ["05:26","06:46","12:39","15:49","18:21","19:31"],
+      ["05:25","06:45","12:38","15:50","18:22","19:32"],
+      ["05:24","06:44","12:38","15:50","18:23","19:32"],
+      ["05:23","06:43","12:38","15:51","18:24","19:33"],
+      ["05:22","06:42","12:38","15:51","18:25","19:34"],
+      ["05:21","06:41","12:38","15:52","18:25","19:35"],
+      ["05:19","06:39","12:38","15:52","18:26","19:35"],
+      ["05:18","06:38","12:37","15:52","18:27","19:36"],
+      ["05:17","06:37","12:37","15:53","18:28","19:37"],
+      ["05:16","06:36","12:37","15:53","18:29","19:38"],
+      ["05:15","06:35","12:37","15:54","18:29","19:38"],
+      ["05:13","06:33","12:36","15:54","18:30","19:39"],
+      ["05:12","06:32","12:36","15:54","18:31","19:40"],
+      ["05:11","06:31","12:36","15:55","18:32","19:41"],
+      ["05:10","06:30","12:36","15:55","18:32","19:41"],
+      ["05:08","06:28","12:35","15:55","18:33","19:42"],
+      ["05:07","06:27","12:35","15:55","18:34","19:43"],
+      ["05:06","06:26","12:35","15:56","18:35","19:44"],
+      ["05:04","06:25","12:35","15:56","18:35","19:44"],
+      ["05:03","06:23","12:34","15:56","18:36","19:45"],
+      ["05:02","06:22","12:34","15:57","18:37","19:46"],
+      ["05:00","06:21","12:34","15:57","18:37","19:47"],
+      ["04:59","06:19","12:34","15:57","18:38","19:47"],
+      ["04:58","06:18","12:33","15:57","18:39","19:48"],
+      ["04:56","06:17","12:33","15:57","18:40","19:49"],
+    ]
+  },
+  "marrakech": {
+    nom: "Marrakech",
+    t:[
+      ["05:38","06:59","12:46","15:52","18:24","19:34"],
+      ["05:37","06:58","12:46","15:52","18:25","19:35"],
+      ["05:36","06:57","12:46","15:53","18:25","19:36"],
+      ["05:35","06:56","12:46","15:53","18:26","19:36"],
+      ["05:34","06:55","12:46","15:54","18:27","19:37"],
+      ["05:33","06:54","12:46","15:54","18:28","19:38"],
+      ["05:32","06:53","12:45","15:55","18:29","19:39"],
+      ["05:31","06:52","12:45","15:55","18:30","19:39"],
+      ["05:30","06:51","12:45","15:56","18:30","19:40"],
+      ["05:29","06:50","12:45","15:56","18:31","19:41"],
+      ["05:28","06:49","12:45","15:57","18:32","19:42"],
+      ["05:26","06:47","12:45","15:57","18:33","19:42"],
+      ["05:25","06:46","12:44","15:57","18:33","19:43"],
+      ["05:24","06:45","12:44","15:58","18:34","19:44"],
+      ["05:23","06:44","12:44","15:58","18:35","19:45"],
+      ["05:22","06:43","12:44","15:59","18:36","19:45"],
+      ["05:20","06:41","12:43","15:59","18:36","19:46"],
+      ["05:19","06:40","12:43","15:59","18:37","19:47"],
+      ["05:18","06:39","12:43","16:00","18:38","19:48"],
+      ["05:17","06:38","12:43","16:00","18:39","19:48"],
+      ["05:15","06:36","12:42","16:00","18:39","19:49"],
+      ["05:14","06:35","12:42","16:00","18:40","19:50"],
+      ["05:13","06:34","12:42","16:01","18:41","19:51"],
+      ["05:11","06:33","12:42","16:01","18:42","19:51"],
+      ["05:10","06:31","12:41","16:01","18:42","19:52"],
+      ["05:09","06:30","12:41","16:02","18:43","19:53"],
+      ["05:07","06:29","12:41","16:02","18:44","19:54"],
+      ["05:06","06:27","12:41","16:02","18:44","19:54"],
+      ["05:05","06:26","12:40","16:02","18:45","19:55"],
+      ["05:03","06:25","12:40","16:02","18:46","19:56"],
+    ]
+  },
+  "fes": {
+    nom: "Fès",
+    t:[
+      ["05:28","06:49","12:37","15:44","18:14","19:24"],
+      ["05:27","06:48","12:37","15:44","18:15","19:25"],
+      ["05:26","06:47","12:37","15:45","18:16","19:26"],
+      ["05:25","06:46","12:37","15:45","18:17","19:26"],
+      ["05:24","06:45","12:37","15:46","18:18","19:27"],
+      ["05:23","06:44","12:37","15:46","18:18","19:28"],
+      ["05:22","06:43","12:36","15:47","18:19","19:29"],
+      ["05:21","06:42","12:36","15:47","18:20","19:29"],
+      ["05:20","06:41","12:36","15:48","18:21","19:30"],
+      ["05:19","06:40","12:36","15:48","18:22","19:31"],
+      ["05:18","06:39","12:36","15:49","18:22","19:32"],
+      ["05:16","06:37","12:36","15:49","18:23","19:32"],
+      ["05:15","06:36","12:35","15:49","18:24","19:33"],
+      ["05:14","06:35","12:35","15:50","18:25","19:34"],
+      ["05:13","06:34","12:35","15:50","18:26","19:35"],
+      ["05:12","06:33","12:35","15:51","18:26","19:35"],
+      ["05:10","06:31","12:34","15:51","18:27","19:36"],
+      ["05:09","06:30","12:34","15:51","18:28","19:37"],
+      ["05:08","06:29","12:34","15:52","18:29","19:38"],
+      ["05:07","06:28","12:34","15:52","18:29","19:38"],
+      ["05:05","06:26","12:33","15:52","18:30","19:39"],
+      ["05:04","06:25","12:33","15:52","18:31","19:40"],
+      ["05:03","06:24","12:33","15:53","18:32","19:41"],
+      ["05:01","06:23","12:33","15:53","18:32","19:41"],
+      ["05:00","06:21","12:32","15:53","18:33","19:42"],
+      ["04:59","06:20","12:32","15:54","18:34","19:43"],
+      ["04:57","06:19","12:32","15:54","18:34","19:44"],
+      ["04:56","06:17","12:32","15:54","18:35","19:44"],
+      ["04:55","06:16","12:31","15:54","18:36","19:45"],
+      ["04:53","06:15","12:31","15:54","18:37","19:46"],
+    ]
+  },
+  "tanger": {
+    nom: "Tanger",
+    t:[
+      ["05:26","06:47","12:35","15:42","18:12","19:22"],
+      ["05:25","06:46","12:35","15:42","18:13","19:23"],
+      ["05:24","06:45","12:35","15:43","18:14","19:24"],
+      ["05:23","06:44","12:35","15:43","18:15","19:24"],
+      ["05:22","06:43","12:35","15:44","18:16","19:25"],
+      ["05:21","06:42","12:35","15:44","18:16","19:26"],
+      ["05:20","06:41","12:34","15:45","18:17","19:27"],
+      ["05:19","06:40","12:34","15:45","18:18","19:27"],
+      ["05:18","06:39","12:34","15:46","18:19","19:28"],
+      ["05:17","06:38","12:34","15:46","18:20","19:29"],
+      ["05:16","06:37","12:34","15:47","18:20","19:30"],
+      ["05:14","06:35","12:34","15:47","18:21","19:30"],
+      ["05:13","06:34","12:33","15:47","18:22","19:31"],
+      ["05:12","06:33","12:33","15:48","18:23","19:32"],
+      ["05:11","06:32","12:33","15:48","18:24","19:33"],
+      ["05:10","06:31","12:33","15:49","18:24","19:33"],
+      ["05:08","06:29","12:32","15:49","18:25","19:34"],
+      ["05:07","06:28","12:32","15:49","18:26","19:35"],
+      ["05:06","06:27","12:32","15:50","18:27","19:36"],
+      ["05:05","06:26","12:32","15:50","18:27","19:36"],
+      ["05:03","06:24","12:31","15:50","18:28","19:37"],
+      ["05:02","06:23","12:31","15:50","18:29","19:38"],
+      ["05:01","06:22","12:31","15:51","18:30","19:39"],
+      ["04:59","06:21","12:31","15:51","18:30","19:39"],
+      ["04:58","06:19","12:30","15:51","18:31","19:40"],
+      ["04:57","06:18","12:30","15:52","18:32","19:41"],
+      ["04:55","06:17","12:30","15:52","18:32","19:42"],
+      ["04:54","06:15","12:30","15:52","18:33","19:42"],
+      ["04:53","06:14","12:29","15:52","18:34","19:43"],
+      ["04:51","06:13","12:29","15:52","18:35","19:44"],
+    ]
+  },
+  "agadir": {
+    nom: "Agadir",
+    t:[
+      ["05:44","07:04","12:50","15:56","18:28","19:38"],
+      ["05:43","07:03","12:50","15:56","18:29","19:39"],
+      ["05:42","07:02","12:50","15:57","18:29","19:40"],
+      ["05:41","07:01","12:50","15:57","18:30","19:40"],
+      ["05:40","07:00","12:50","15:58","18:31","19:41"],
+      ["05:39","06:59","12:50","15:58","18:32","19:42"],
+      ["05:38","06:58","12:49","15:59","18:33","19:43"],
+      ["05:37","06:57","12:49","15:59","18:34","19:43"],
+      ["05:36","06:56","12:49","16:00","18:34","19:44"],
+      ["05:35","06:55","12:49","16:00","18:35","19:45"],
+      ["05:34","06:54","12:49","16:01","18:36","19:46"],
+      ["05:32","06:52","12:49","16:01","18:37","19:46"],
+      ["05:31","06:51","12:48","16:01","18:37","19:47"],
+      ["05:30","06:50","12:48","16:02","18:38","19:48"],
+      ["05:29","06:49","12:48","16:02","18:39","19:49"],
+      ["05:28","06:48","12:48","16:03","18:40","19:49"],
+      ["05:26","06:46","12:47","16:03","18:40","19:50"],
+      ["05:25","06:45","12:47","16:03","18:41","19:51"],
+      ["05:24","06:44","12:47","16:04","18:42","19:52"],
+      ["05:23","06:43","12:47","16:04","18:43","19:52"],
+      ["05:21","06:41","12:46","16:04","18:43","19:53"],
+      ["05:20","06:40","12:46","16:04","18:44","19:54"],
+      ["05:19","06:39","12:46","16:05","18:45","19:55"],
+      ["05:17","06:38","12:46","16:05","18:46","19:55"],
+      ["05:16","06:36","12:45","16:05","18:46","19:56"],
+      ["05:15","06:35","12:45","16:06","18:47","19:57"],
+      ["05:13","06:34","12:45","16:06","18:48","19:58"],
+      ["05:12","06:32","12:45","16:06","18:48","19:58"],
+      ["05:11","06:31","12:44","16:06","18:49","19:59"],
+      ["05:09","06:30","12:44","16:06","18:50","20:00"],
+    ]
+  },
+  "meknes": {
+    nom: "Meknès",
+    t:[
+      ["05:30","06:51","12:38","15:46","18:15","19:25"],
+      ["05:29","06:50","12:38","15:46","18:16","19:26"],
+      ["05:28","06:49","12:38","15:47","18:17","19:27"],
+      ["05:27","06:48","12:38","15:47","18:18","19:27"],
+      ["05:26","06:47","12:38","15:48","18:19","19:28"],
+      ["05:25","06:46","12:38","15:48","18:19","19:29"],
+      ["05:24","06:45","12:37","15:49","18:20","19:30"],
+      ["05:23","06:44","12:37","15:49","18:21","19:30"],
+      ["05:22","06:43","12:37","15:50","18:22","19:31"],
+      ["05:21","06:42","12:37","15:50","18:23","19:32"],
+      ["05:20","06:41","12:37","15:51","18:23","19:33"],
+      ["05:18","06:39","12:37","15:51","18:24","19:33"],
+      ["05:17","06:38","12:36","15:51","18:25","19:34"],
+      ["05:16","06:37","12:36","15:52","18:26","19:35"],
+      ["05:15","06:36","12:36","15:52","18:27","19:36"],
+      ["05:14","06:35","12:36","15:53","18:27","19:36"],
+      ["05:12","06:33","12:35","15:53","18:28","19:37"],
+      ["05:11","06:32","12:35","15:53","18:29","19:38"],
+      ["05:10","06:31","12:35","15:54","18:30","19:39"],
+      ["05:09","06:30","12:35","15:54","18:30","19:39"],
+      ["05:07","06:28","12:34","15:54","18:31","19:40"],
+      ["05:06","06:27","12:34","15:54","18:32","19:41"],
+      ["05:05","06:26","12:34","15:55","18:33","19:42"],
+      ["05:03","06:25","12:34","15:55","18:33","19:42"],
+      ["05:02","06:23","12:33","15:55","18:34","19:43"],
+      ["05:01","06:22","12:33","15:56","18:35","19:44"],
+      ["04:59","06:21","12:33","15:56","18:35","19:45"],
+      ["04:58","06:19","12:33","15:56","18:36","19:45"],
+      ["04:57","06:18","12:32","15:56","18:37","19:46"],
+      ["04:55","06:17","12:32","15:56","18:38","19:47"],
+    ]
+  },
+  "oujda": {
+    nom: "Oujda",
+    t:[
+      ["05:20","06:41","12:27","15:34","18:03","19:13"],
+      ["05:19","06:40","12:27","15:34","18:04","19:14"],
+      ["05:18","06:39","12:27","15:35","18:05","19:15"],
+      ["05:17","06:38","12:27","15:35","18:06","19:15"],
+      ["05:16","06:37","12:27","15:36","18:07","19:16"],
+      ["05:15","06:36","12:27","15:36","18:07","19:17"],
+      ["05:14","06:35","12:26","15:37","18:08","19:18"],
+      ["05:13","06:34","12:26","15:37","18:09","19:18"],
+      ["05:12","06:33","12:26","15:38","18:10","19:19"],
+      ["05:11","06:32","12:26","15:38","18:11","19:20"],
+      ["05:10","06:31","12:26","15:39","18:11","19:21"],
+      ["05:08","06:29","12:26","15:39","18:12","19:21"],
+      ["05:07","06:28","12:25","15:39","18:13","19:22"],
+      ["05:06","06:27","12:25","15:40","18:14","19:23"],
+      ["05:05","06:26","12:25","15:40","18:15","19:24"],
+      ["05:04","06:25","12:25","15:41","18:15","19:24"],
+      ["05:02","06:23","12:24","15:41","18:16","19:25"],
+      ["05:01","06:22","12:24","15:41","18:17","19:26"],
+      ["05:00","06:21","12:24","15:42","18:18","19:27"],
+      ["04:59","06:20","12:24","15:42","18:18","19:27"],
+      ["04:57","06:18","12:23","15:42","18:19","19:28"],
+      ["04:56","06:17","12:23","15:42","18:20","19:29"],
+      ["04:55","06:16","12:23","15:43","18:21","19:30"],
+      ["04:53","06:15","12:23","15:43","18:21","19:30"],
+      ["04:52","06:13","12:22","15:43","18:22","19:31"],
+      ["04:51","06:12","12:22","15:44","18:23","19:32"],
+      ["04:49","06:11","12:22","15:44","18:23","19:33"],
+      ["04:48","06:09","12:22","15:44","18:24","19:33"],
+      ["04:47","06:08","12:21","15:44","18:25","19:34"],
+      ["04:45","06:07","12:21","15:44","18:26","19:35"],
+    ]
+  },
+  "kenitra": {
+    nom: "Kénitra",
+    t:[
+      ["05:30","06:50","12:38","15:46","18:15","19:25"],
+      ["05:29","06:49","12:38","15:46","18:16","19:26"],
+      ["05:28","06:48","12:38","15:47","18:17","19:27"],
+      ["05:27","06:47","12:38","15:47","18:18","19:27"],
+      ["05:26","06:46","12:38","15:48","18:19","19:28"],
+      ["05:25","06:45","12:38","15:48","18:19","19:29"],
+      ["05:24","06:44","12:37","15:49","18:20","19:30"],
+      ["05:23","06:43","12:37","15:49","18:21","19:30"],
+      ["05:22","06:42","12:37","15:50","18:22","19:31"],
+      ["05:21","06:41","12:37","15:50","18:23","19:32"],
+      ["05:20","06:40","12:37","15:51","18:23","19:33"],
+      ["05:18","06:38","12:37","15:51","18:24","19:33"],
+      ["05:17","06:37","12:36","15:51","18:25","19:34"],
+      ["05:16","06:36","12:36","15:52","18:26","19:35"],
+      ["05:15","06:35","12:36","15:52","18:27","19:36"],
+      ["05:14","06:34","12:36","15:53","18:27","19:36"],
+      ["05:12","06:32","12:35","15:53","18:28","19:37"],
+      ["05:11","06:31","12:35","15:53","18:29","19:38"],
+      ["05:10","06:30","12:35","15:54","18:30","19:39"],
+      ["05:09","06:29","12:35","15:54","18:30","19:39"],
+      ["05:07","06:27","12:34","15:54","18:31","19:40"],
+      ["05:06","06:26","12:34","15:54","18:32","19:41"],
+      ["05:05","06:25","12:34","15:55","18:33","19:42"],
+      ["05:03","06:24","12:34","15:55","18:33","19:42"],
+      ["05:02","06:22","12:33","15:55","18:34","19:43"],
+      ["05:01","06:21","12:33","15:56","18:35","19:44"],
+      ["04:59","06:20","12:33","15:56","18:35","19:45"],
+      ["04:58","06:18","12:33","15:56","18:36","19:45"],
+      ["04:57","06:17","12:32","15:56","18:37","19:46"],
+      ["04:55","06:16","12:32","15:56","18:38","19:47"],
+    ]
+  },
+  "tetouan": {
+    nom: "Tétouan",
+    t:[
+      ["05:25","06:46","12:34","15:41","18:11","19:21"],
+      ["05:24","06:45","12:34","15:41","18:12","19:22"],
+      ["05:23","06:44","12:34","15:42","18:13","19:23"],
+      ["05:22","06:43","12:34","15:42","18:14","19:23"],
+      ["05:21","06:42","12:34","15:43","18:15","19:24"],
+      ["05:20","06:41","12:34","15:43","18:15","19:25"],
+      ["05:19","06:40","12:33","15:44","18:16","19:26"],
+      ["05:18","06:39","12:33","15:44","18:17","19:26"],
+      ["05:17","06:38","12:33","15:45","18:18","19:27"],
+      ["05:16","06:37","12:33","15:45","18:19","19:28"],
+      ["05:15","06:36","12:33","15:46","18:19","19:29"],
+      ["05:13","06:34","12:33","15:46","18:20","19:29"],
+      ["05:12","06:33","12:32","15:46","18:21","19:30"],
+      ["05:11","06:32","12:32","15:47","18:22","19:31"],
+      ["05:10","06:31","12:32","15:47","18:23","19:32"],
+      ["05:09","06:30","12:32","15:48","18:23","19:32"],
+      ["05:07","06:28","12:31","15:48","18:24","19:33"],
+      ["05:06","06:27","12:31","15:48","18:25","19:34"],
+      ["05:05","06:26","12:31","15:49","18:26","19:35"],
+      ["05:04","06:25","12:31","15:49","18:26","19:35"],
+      ["05:02","06:23","12:30","15:49","18:27","19:36"],
+      ["05:01","06:22","12:30","15:49","18:28","19:37"],
+      ["05:00","06:21","12:30","15:50","18:29","19:38"],
+      ["04:58","06:20","12:30","15:50","18:29","19:38"],
+      ["04:57","06:18","12:29","15:50","18:30","19:39"],
+      ["04:56","06:17","12:29","15:51","18:31","19:40"],
+      ["04:54","06:16","12:29","15:51","18:31","19:41"],
+      ["04:53","06:14","12:29","15:51","18:32","19:41"],
+      ["04:52","06:13","12:28","15:51","18:33","19:42"],
+      ["04:50","06:12","12:28","15:51","18:34","19:43"],
+    ]
+  },
+  "safi": {
+    nom: "Safi",
+    t:[
+      ["05:36","06:56","12:43","15:51","18:21","19:31"],
+      ["05:35","06:55","12:43","15:51","18:22","19:32"],
+      ["05:34","06:54","12:43","15:52","18:23","19:33"],
+      ["05:33","06:53","12:43","15:52","18:24","19:33"],
+      ["05:32","06:52","12:43","15:53","18:25","19:34"],
+      ["05:31","06:51","12:43","15:53","18:25","19:35"],
+      ["05:30","06:50","12:42","15:54","18:26","19:36"],
+      ["05:29","06:49","12:42","15:54","18:27","19:36"],
+      ["05:28","06:48","12:42","15:55","18:28","19:37"],
+      ["05:27","06:47","12:42","15:55","18:29","19:38"],
+      ["05:26","06:46","12:42","15:56","18:29","19:39"],
+      ["05:24","06:44","12:42","15:56","18:30","19:39"],
+      ["05:23","06:43","12:41","15:56","18:31","19:40"],
+      ["05:22","06:42","12:41","15:57","18:32","19:41"],
+      ["05:21","06:41","12:41","15:57","18:33","19:42"],
+      ["05:20","06:40","12:41","15:58","18:33","19:42"],
+      ["05:18","06:38","12:40","15:58","18:34","19:43"],
+      ["05:17","06:37","12:40","15:58","18:35","19:44"],
+      ["05:16","06:36","12:40","15:59","18:36","19:45"],
+      ["05:15","06:35","12:40","15:59","18:37","19:45"],
+      ["05:13","06:33","12:39","15:59","18:37","19:46"],
+      ["05:12","06:32","12:39","15:59","18:38","19:47"],
+      ["05:11","06:31","12:39","16:00","18:39","19:48"],
+      ["05:09","06:30","12:39","16:00","18:40","19:48"],
+      ["05:08","06:28","12:38","16:00","18:40","19:49"],
+      ["05:07","06:27","12:38","16:01","18:41","19:50"],
+      ["05:05","06:26","12:38","16:01","18:42","19:51"],
+      ["05:04","06:24","12:38","16:01","18:42","19:51"],
+      ["05:03","06:23","12:37","16:01","18:43","19:52"],
+      ["05:01","06:22","12:37","16:01","18:44","19:53"],
+    ]
+  },
+  "eljadida": {
+    nom: "El Jadida",
+    t:[
+      ["05:33","06:53","12:41","15:49","18:19","19:29"],
+      ["05:32","06:52","12:41","15:49","18:20","19:30"],
+      ["05:31","06:51","12:41","15:50","18:21","19:31"],
+      ["05:30","06:50","12:41","15:50","18:22","19:31"],
+      ["05:29","06:49","12:41","15:51","18:23","19:32"],
+      ["05:28","06:48","12:41","15:51","18:23","19:33"],
+      ["05:27","06:47","12:40","15:52","18:24","19:34"],
+      ["05:26","06:46","12:40","15:52","18:25","19:34"],
+      ["05:25","06:45","12:40","15:53","18:26","19:35"],
+      ["05:24","06:44","12:40","15:53","18:27","19:36"],
+      ["05:23","06:43","12:40","15:54","18:27","19:37"],
+      ["05:21","06:41","12:40","15:54","18:28","19:37"],
+      ["05:20","06:40","12:39","15:54","18:29","19:38"],
+      ["05:19","06:39","12:39","15:55","18:30","19:39"],
+      ["05:18","06:38","12:39","15:55","18:31","19:40"],
+      ["05:17","06:37","12:39","15:56","18:31","19:40"],
+      ["05:15","06:35","12:38","15:56","18:32","19:41"],
+      ["05:14","06:34","12:38","15:56","18:33","19:42"],
+      ["05:13","06:33","12:38","15:57","18:34","19:43"],
+      ["05:12","06:32","12:38","15:57","18:34","19:43"],
+      ["05:10","06:30","12:37","15:57","18:35","19:44"],
+      ["05:09","06:29","12:37","15:57","18:36","19:45"],
+      ["05:08","06:28","12:37","15:58","18:37","19:46"],
+      ["05:06","06:27","12:37","15:58","18:37","19:46"],
+      ["05:05","06:25","12:36","15:58","18:38","19:47"],
+      ["05:04","06:24","12:36","15:59","18:39","19:48"],
+      ["05:02","06:23","12:36","15:59","18:39","19:49"],
+      ["05:01","06:21","12:36","15:59","18:40","19:49"],
+      ["05:00","06:20","12:35","15:59","18:41","19:50"],
+      ["04:58","06:19","12:35","15:59","18:42","19:51"],
+    ]
+  },
+  "khouribga": {
+    nom: "Khouribga",
+    t:[
+      ["05:34","06:54","12:42","15:50","18:20","19:30"],
+      ["05:33","06:53","12:42","15:50","18:21","19:31"],
+      ["05:32","06:52","12:42","15:51","18:22","19:32"],
+      ["05:31","06:51","12:42","15:51","18:23","19:32"],
+      ["05:30","06:50","12:42","15:52","18:24","19:33"],
+      ["05:29","06:49","12:42","15:52","18:24","19:34"],
+      ["05:28","06:48","12:41","15:53","18:25","19:35"],
+      ["05:27","06:47","12:41","15:53","18:26","19:35"],
+      ["05:26","06:46","12:41","15:54","18:27","19:36"],
+      ["05:25","06:45","12:41","15:54","18:28","19:37"],
+      ["05:24","06:44","12:41","15:55","18:28","19:38"],
+      ["05:22","06:42","12:41","15:55","18:29","19:38"],
+      ["05:21","06:41","12:40","15:55","18:30","19:39"],
+      ["05:20","06:40","12:40","15:56","18:31","19:40"],
+      ["05:19","06:39","12:40","15:56","18:32","19:41"],
+      ["05:18","06:38","12:40","15:57","18:32","19:41"],
+      ["05:16","06:36","12:39","15:57","18:33","19:42"],
+      ["05:15","06:35","12:39","15:57","18:34","19:43"],
+      ["05:14","06:34","12:39","15:58","18:35","19:44"],
+      ["05:13","06:33","12:39","15:58","18:35","19:44"],
+      ["05:11","06:31","12:38","15:58","18:36","19:45"],
+      ["05:10","06:30","12:38","15:58","18:37","19:46"],
+      ["05:09","06:29","12:38","15:59","18:38","19:47"],
+      ["05:07","06:28","12:38","15:59","18:38","19:47"],
+      ["05:06","06:26","12:37","15:59","18:39","19:48"],
+      ["05:05","06:25","12:37","16:00","18:40","19:49"],
+      ["05:03","06:24","12:37","16:00","18:40","19:50"],
+      ["05:02","06:22","12:37","16:00","18:41","19:50"],
+      ["05:01","06:21","12:36","16:00","18:42","19:51"],
+      ["04:59","06:20","12:36","16:00","18:43","19:52"],
+    ]
+  },
+  "laayoune": {
+    nom: "Laâyoune",
+    t:[
+      ["05:58","07:17","13:03","16:10","18:41","19:51"],
+      ["05:57","07:16","13:03","16:10","18:42","19:52"],
+      ["05:56","07:15","13:03","16:11","18:42","19:53"],
+      ["05:55","07:14","13:03","16:11","18:43","19:53"],
+      ["05:54","07:13","13:03","16:12","18:44","19:54"],
+      ["05:53","07:12","13:03","16:12","18:45","19:55"],
+      ["05:52","07:11","13:02","16:13","18:46","19:56"],
+      ["05:51","07:10","13:02","16:13","18:47","19:56"],
+      ["05:50","07:09","13:02","16:14","18:47","19:57"],
+      ["05:49","07:08","13:02","16:14","18:48","19:58"],
+      ["05:48","07:07","13:02","16:15","18:49","19:59"],
+      ["05:46","07:05","13:02","16:15","18:50","19:59"],
+      ["05:45","07:04","13:01","16:15","18:50","20:00"],
+      ["05:44","07:03","13:01","16:16","18:51","20:01"],
+      ["05:43","07:02","13:01","16:16","18:52","20:02"],
+      ["05:42","07:01","13:01","16:17","18:53","20:02"],
+      ["05:40","06:59","13:00","16:17","18:53","20:03"],
+      ["05:39","06:58","13:00","16:17","18:54","20:04"],
+      ["05:38","06:57","13:00","16:18","18:55","20:05"],
+      ["05:37","06:56","13:00","16:18","18:56","20:05"],
+      ["05:35","06:54","12:59","16:18","18:56","20:06"],
+      ["05:34","06:53","12:59","16:18","18:57","20:07"],
+      ["05:33","06:52","12:59","16:19","18:58","20:08"],
+      ["05:31","06:51","12:59","16:19","18:59","20:08"],
+      ["05:30","06:49","12:58","16:19","18:59","20:09"],
+      ["05:29","06:48","12:58","16:20","19:00","20:10"],
+      ["05:27","06:47","12:58","16:20","19:01","20:11"],
+      ["05:26","06:45","12:58","16:20","19:01","20:11"],
+      ["05:25","06:44","12:57","16:20","19:02","20:12"],
+      ["05:23","06:43","12:57","16:20","19:03","20:13"],
+    ]
+  },
+};
+
+
+
+
+const RAMADAN_START = new Date('2026-02-19');
+const PRAYER_KEYS = ['Fajr','Shuruq','Dhuhr','Asr','Maghrib','Isha'];
+const PEMOJI = ['🌅','☀️','🌤️','🌇','🌙','⭐'];
+let cdInterval = null;
+
+function getRamadanDay() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const start = new Date(RAMADAN_START);
+  start.setHours(0,0,0,0);
+  const diff = Math.floor((today - start) / 86400000);
+  if (diff < 0 || diff >= 30) return null;
+  return diff; // 0-based (0=R1, 29=R30)
+}
+
+
+
+
+function go(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('sec-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+
+
+
+function tickClock() {
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    n.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('gdate').textContent =
+    n.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+(async () => {
+  try {
+    const n = new Date();
+    const d = `${String(n.getDate()).padStart(2,'0')}-${String(n.getMonth()+1).padStart(2,'0')}-${n.getFullYear()}`;
+    const r = await fetch(`https://api.aladhan.com/v1/gToH/${d}`);
+    const j = await r.json();
+    if (j.code === 200) {
+      const h = j.data.hijri;
+      document.getElementById('hdate').textContent = `${h.day} ${h.month.en} ${h.year} H`;
+    }
+  } catch(_) {
+    const rDay = getRamadanDay();
+    document.getElementById('hdate').textContent = rDay !== null
+      ? `${rDay+1} Ramadan 1446 H` : 'Ramadan 1446 H';
+  }
+})();
+
+
+
+
+function showPrayers() {
+  const cityKey = document.getElementById('city-sel').value;
+  const cityData = HABOUS[cityKey];
+  if (!cityData) return;
+
+  const rDay = getRamadanDay();
+  const grid = document.getElementById('pgrid');
+  grid.innerHTML = '';
+
+
+  const rdayEl = document.getElementById('rday-num');
+  const rdateEl = document.getElementById('rday-date');
+
+  if (rDay === null) {
+    rdayEl.textContent = 'Hors Ramadan';
+    rdateEl.textContent = '19 fév – 20 mars 2026';
+    grid.innerHTML = '<div class="no-prayer">⚠️ Les horaires Ramadan 1446 sont disponibles du 19 février au 20 mars 2026.</div>';
+    document.getElementById('clabel').textContent = '--';
+    document.getElementById('ctime').textContent = '--:--:--';
+    return;
+  }
+
+  rdayEl.textContent = `Ramadan ${rDay + 1}`;
+  const dateObj = new Date(RAMADAN_START);
+  dateObj.setDate(dateObj.getDate() + rDay);
+  rdateEl.textContent = dateObj.toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+
+  const times = cityData.t[rDay];
+  if (!times) return;
+
+  const now = new Date();
+  const nowMin = now.getHours()*60 + now.getMinutes();
+  let next = -1, nd = Infinity;
+  times.forEach((t, i) => {
+    const [h,m] = t.split(':').map(Number);
+    const diff = h*60+m - nowMin;
+    if (diff > 0 && diff < nd) { nd = diff; next = i; }
+  });
+
+  PRAYER_KEYS.forEach((name, i) => {
+    const isNext = i === next;
+    const div = document.createElement('div');
+    div.className = 'pitem' + (isNext ? ' next' : '');
+    div.innerHTML = `
+      <div class="pname">${PEMOJI[i]} ${name}</div>
+      <div class="ptime">${times[i]}</div>
+      ${isNext ? '<div class="badge">Prochain</div>' : ''}
+    `;
+    grid.appendChild(div);
+  });
+
+  if (cdInterval) clearInterval(cdInterval);
+  if (next === -1) {
+    document.getElementById('clabel').textContent = 'Toutes les prières accomplies 🌙';
+    document.getElementById('ctime').textContent = 'Demain inchAllah';
+    return;
+  }
+
+  const isIftar = next === 4; // Maghrib
+  document.getElementById('clabel').textContent =
+    isIftar ? '🌙 Iftar dans' : `⏰ ${PRAYER_KEYS[next]} dans`;
+
+  const [ph,pm] = times[next].split(':').map(Number);
+  const target = new Date(); target.setHours(ph,pm,0,0);
+
+  function tick() {
+    const diff = target - new Date();
+    if (diff <= 0) {
+      document.getElementById('ctime').textContent = isIftar ? '🌙 IFTAR !' : "C'est l'heure !";
+      clearInterval(cdInterval); return;
+    }
+    const hh = Math.floor(diff/3600000).toString().padStart(2,'0');
+    const mm = Math.floor((diff%3600000)/60000).toString().padStart(2,'0');
+    const ss = Math.floor((diff%60000)/1000).toString().padStart(2,'0');
+    document.getElementById('ctime').textContent = `${hh}:${mm}:${ss}`;
+  }
+  tick();
+  cdInterval = setInterval(tick, 1000);
+}
+
+
+
+
+const MENUS = {
+  equilibre:    {"🥗 Entrée":["Chorba","Dattes (3)","Lait fermenté","Salade marocaine"],"🍲 Plat principal":["Tajine poulet olives","Couscous légumes","Riz pilaf"],"🧁 Dessert":["Chebakia","Fruits de saison"],"💧 Boissons":["Eau","Jus d'orange","Lait"]},
+  leger:        {"🥗 Entrée":["Dattes (3)","Soupe légère","Yaourt"],"🍲 Plat principal":["Salade composée","Œufs marocains","Pain complet"],"🧁 Dessert":["Fruits frais","Lait d'amandes"],"💧 Boissons":["Eau","Citronnade","Thé vert"]},
+  traditionnel: {"🥗 Entrée":["Harira marocaine","Dattes (7)","Beghrir","Chebakia"],"🍲 Plat principal":["Pastilla poulet","Tajine kefta","Couscous mouton"],"🧁 Dessert":["Kaab el ghazal","Sellou","Fruits secs"],"💧 Boissons":["Thé menthe","Lait fermenté","Eau"]},
+};
+
+function genMenu() {
+  const ingr = document.getElementById('ingr').value.trim();
+  const pref = document.getElementById('mpref').value;
+  let html = `<p style="color:var(--muted);font-size:.8rem;margin-bottom:12px;">🍽️ Menu ${pref}${ingr?' — adapté à vos ingrédients':''}</p>`;
+  for (const [cat,items] of Object.entries(MENUS[pref]))
+    html += `<div class="mcat"><h3>${cat}</h3><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`;
+  if (ingr) html += `<div style="margin-top:10px;padding:10px;background:rgba(201,168,76,.06);border-radius:10px;font-size:.78rem;color:var(--gold);">💡 Ingrédients : ${ingr}</div>`;
+  const el = document.getElementById('mresult');
+  el.innerHTML = html; el.classList.add('on');
+}
+
+
+
+
+function toggleH(el) {
+  el.classList.toggle('done');
+  const all = document.querySelectorAll('.hitem').length;
+  const done = document.querySelectorAll('.hitem.done').length;
+  document.getElementById('pbar').style.width = Math.round(done/all*100)+'%';
+  document.getElementById('plabel').textContent = `${done} / ${all} accompli`;
+}
+
+
+
+
+function calcZakat() {
+  const v = id => parseFloat(document.getElementById(id).value)||0;
+  const total = v('z1')+v('z2')+v('z3')*350+v('z4')*4+v('z5')+v('z6');
+  const nisab = 29750;
+  const zakat = total >= nisab ? +(total*0.025).toFixed(2) : 0;
+  document.getElementById('zamount').textContent = zakat.toLocaleString('fr-FR')+' MAD';
+  document.getElementById('zinfo').textContent = total < nisab
+    ? `⚠️ Total ${total.toFixed(0)} MAD < Nisab ${nisab} MAD — Zakat non obligatoire`
+    : `✅ Total : ${total.toFixed(0)} MAD | Nisab atteint | Taux 2.5%`;
+  document.getElementById('zresult').classList.add('on');
+}
+
+
+
+
+const DUAAS = [
+  {a:"اللَّهُمَّ إِنَّكَ عَفُوٌّ كَرِيمٌ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",t:"Ô Allah, Tu es Celui qui pardonne, Tu aimes pardonner, alors pardonne-moi.",c:"Dou'a de Laylat al-Qadr — à réciter souvent"},
+  {a:"اللَّهُمَّ لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ",t:"Ô Allah, c'est pour Toi que j'ai jeûné, c'est en Toi que je crois, et c'est avec Ta nourriture que je romps le jeûne.",c:"Dou'a de rupture du jeûne (Iftar)"},
+  {a:"ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ",t:"La soif est partie, les veines sont humidifiées et la récompense est confirmée, si Allah le veut.",c:"Après l'Iftar — rapporté par le Prophète ﷺ"},
+  {a:"رَبِّ اغْفِرْ لِي وَارْحَمْنِي وَاهْدِنِي وَارْزُقْنِي",t:"Seigneur, pardonne-moi, aie pitié de moi, guide-moi et pourvois à ma subsistance.",c:"Dou'a générale — à répéter entre les prières"},
+  {a:"اللَّهُمَّ آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",t:"Ô Allah, accorde-nous le bien en ce monde et dans l'au-delà, et préserve-nous du châtiment du Feu.",c:"La dou'a la plus complète — Al-Baqarah 2:201"},
+  {a:"سُبْحَانَ اللَّهِ وَبِحَمْدِهِ سُبْحَانَ اللَّهِ الْعَظِيمِ",t:"Gloire à Allah et louange à Lui, Gloire à Allah le Très Grand.",c:"Légère sur la langue, lourde dans la balance — 100× par jour"},
+  {a:"اللَّهُمَّ اجْعَلْنِي مِنَ الَّذِينَ يَصُومُونَ هَذَا الشَّهْرَ إِيمَانًا وَاحْتِسَابًا",t:"Ô Allah, fais de moi parmi ceux qui jeûnent ce mois avec foi et dévotion.",c:"Dou'a spéciale Ramadan"},
+];
+let di=0;
+function renderD(){
+  const d=DUAAS[di];
+  document.getElementById('dcard').innerHTML=`<div class="darabic">${d.a}</div><div class="dtrans">"${d.t}"</div><div class="dctx">${d.c}</div>`;
+  document.getElementById('dctr').textContent=`${di+1} / ${DUAAS.length}`;
+}
+function nextD(){di=(di+1)%DUAAS.length;renderD()}
+function prevD(){di=(di-1+DUAAS.length)%DUAAS.length;renderD()}
+
+
+renderD();
+showPrayers();
+</script>
+</body>
+</html>
